@@ -49,8 +49,6 @@ system_update(){
 
 install_git(){
   log_info "Verificando instalação do Git..."
-  if ! command -v git &> /dev/null; then
-    log_info "Instalando Git..."
     if is_deb_system; then
       sudo apt-get install -y git && log_success "Git instalado com sucesso!"
     elif command -v pacman &> /dev/null; then
@@ -60,75 +58,50 @@ install_git(){
     else
       log_warning "Gerenciador de pacotes não suportado para instalação do Git."
     fi
-  else
-    log_info "Git já está instalado."
   fi
 }
 
 install_wget(){
   log_info "Verificando instalação do Wget..."
-  if ! command -v wget &> /dev/null; then
-    log_info "Instalando Wget..."
-    if is_deb_system; then
-      sudo apt-get install -y wget && log_success "Wget instalado com sucesso!"
-    elif command -v pacman &> /dev/null; then
-      sudo pacman -S --noconfirm wget && log_success "Wget instalado com sucesso!"
-    elif command -v dnf &> /dev/null; then
-      sudo dnf install -y wget && log_success "Wget instalado com sucesso!"
-    else
-      log_warning "Gerenciador de pacotes não suportado para instalação do Wget."
-    fi
+  if is_deb_system; then
+    sudo apt-get install -y wget && log_success "Wget instalado com sucesso!"
+  elif command -v pacman &> /dev/null; then
+    sudo pacman -S --noconfirm wget && log_success "Wget instalado com sucesso!"
+  elif command -v dnf &> /dev/null; then
+    sudo dnf install -y wget && log_success "Wget instalado com sucesso!"
   else
-    log_info "Wget já está instalado."
+    log_warning "Gerenciador de pacotes não suportado para instalação do Wget."
   fi
 }
 
 install_flatpak(){
-  log_info "Verificando instalação do Flatpak..."
-  if ! command -v flatpak &> /dev/null; then
-    log_info "Instalando Flatpak..."
-    if is_deb_system; then
-      sudo apt-get install -y flatpak && log_success "Flatpak instalado com sucesso!"
-    else
-      sudo pacman -S --noconfirm flatpak || sudo dnf install -y flatpak && log_success "Flatpak instalado com sucesso!"
-    fi
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  log_info "Instalando Flatpak..."
+  if is_deb_system; then
+    sudo apt-get install -y flatpak && log_success "Flatpak instalado com sucesso!"
   else
-    log_info "Flatpak já está instalado."
+    sudo pacman -S --noconfirm flatpak || sudo dnf install -y flatpak && log_success "Flatpak instalado com sucesso!"
+  fi
+  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
   fi
 }
 
 install_snap(){
   log_info "Verificando instalação do Snap..."
-  if ! command -v snap &> /dev/null; then
-    log_info "Instalando Snap..."
-    if is_deb_system; then
-      sudo apt-get install -y snapd && log_success "Snap instalado com sucesso!"
-    else
-      sudo pacman -S --noconfirm snapd || sudo dnf install -y snapd && log_success "Snap instalado com sucesso!"
-    fi
+  if is_deb_system; then
+    sudo apt-get install -y snapd && log_success "Snap instalado com sucesso!"
   else
-    log_info "Snap já está instalado."
+    sudo pacman -S --noconfirm snapd || sudo dnf install -y snapd && log_success "Snap instalado com sucesso!"
   fi
 }
 
 install_gnome_software(){
-  log_info "Verificando instalação do Gnome Software..."
-  if ! command -v gnome-software &> /dev/null; then
-    log_info "Instalando Gnome Software..."
-    sudo apt-get install -y gnome-software && log_success "Gnome Software instalado com sucesso!"
-  else
-    log_info "Gnome Software já está instalado."
+  log_info "Instalando Gnome Software..."
+  sudo apt-get install -y gnome-software && log_success "Gnome Software instalado com sucesso!"
   fi
 }
 
 install_onlyoffice(){
-  log_info "Verificando instalação do OnlyOffice..."
-  if command -v desktopeditors &> /dev/null; then
-    log_info "OnlyOffice já está instalado."
-    return
-  fi
-
   log_info "Instalando OnlyOffice..."
   if is_deb_system; then
     sudo snap install onlyoffice-desktopeditors
@@ -157,12 +130,6 @@ install_postman(){
 
 
 install_vscode(){
-  log_info "Verificando instalação do VSCode..."
-  if command -v code &> /dev/null; then
-    log_info "VSCode já está instalado."
-    return
-  fi
-
   log_info "Instalando VSCode..."
   if is_deb_system; then
     wget -q https://go.microsoft.com/fwlink/?LinkID=760868 -O vscode.deb
@@ -175,12 +142,6 @@ install_vscode(){
 }
 
 install_discord() {
-  log_info "Verificando instalação do Discord..."
-  if command -v discord &> /dev/null; then
-    log_info "Discord já está instalado."
-    return
-  fi
-
   log_info "Instalando Discord..."
   if is_deb_system; then
     wget -q "https://discord.com/api/download?platform=linux&format=deb" -O discord.deb
@@ -193,12 +154,6 @@ install_discord() {
 }
 
 install_mongo_compass(){
-  log_info "Verificando instalação do MongoDB Compass..."
-  if command -v mongodb-compass &> /dev/null; then
-    log_info "MongoDB Compass já está instalado."
-    return
-  fi
-
   log_info "Instalando MongoDB Compass..."
   if is_deb_system; then
     wget -q https://downloads.mongodb.com/compass/mongodb-compass_1.44.5_amd64.deb -O mongodb-compass.deb
@@ -211,12 +166,6 @@ install_mongo_compass(){
 }
 
 install_vivaldi(){
-  log_info "Verificando instalação do Vivaldi..."
-  if command -v vivaldi &> /dev/null; then
-    log_info "Vivaldi já está instalado."
-    return
-  fi
-
   log_info "Instalando Vivaldi..."
   if is_deb_system; then
     wget -q https://downloads.vivaldi.com/stable/vivaldi-stable_6.2.3105.36-1_amd64.deb -O vivaldi.deb
@@ -229,29 +178,18 @@ install_vivaldi(){
 }
 
 install_google_chrome(){
-  log_info "Verificando instalação do Google Chrome..."
-  if command -v google-chrome &> /dev/null; then
-    log_info "Google Chrome já está instalado."
-    return
-  fi
-
   log_info "Instalando Google Chrome..."
   if is_deb_system; then
     wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O chrome.deb
     sudo dpkg -i chrome.deb
-    sudo apt-get install -f -y
-    rm chrome.deb && log_success "Google Chrome instalado com sucesso!"
+    rm chrome.deb
+    log_success "Google Chrome instalado com sucesso!"
   else
     log_warning "Instalação automática do Google Chrome não suportada fora de sistemas baseados em Debian."
   fi
 }
 
 install_warp_terminal(){
-  log_info "Verificando instalação do Warp Terminal..."
-  if command -v warp &> /dev/null; then
-    log_info "Warp Terminal já está instalado."
-    return
-  fi
   log_info "Instalando Warp Terminal..."
   wget -q https://app.warp.dev/get_warp?package=deb -O warp.deb
   sudo dpkg -i warp.deb
@@ -260,12 +198,6 @@ install_warp_terminal(){
 }
 
 install_stremio(){
-  log_info "Verificando instalação do Stremio..."
-  if command -v stremio &> /dev/null; then
-    log_info "Stremio já está instalado."
-    return
-  fi
-
   log_info "Instalando Stremio..."
   if is_deb_system; then
     wget -q https://dl.strem.io/stremio/releases/stremio_0.22.1_amd64.deb -O stremio.deb
