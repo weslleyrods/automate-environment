@@ -1,0 +1,6 @@
+
+apt: 
+
+flatpak:
+
+snap:

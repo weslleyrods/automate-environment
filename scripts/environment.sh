@@ -1,29 +1,6 @@
 #!/bin/bash
 set -e
 
-# Cores para logs
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # Sem cor
-
-log_info() {
-  echo -e "${BLUE}[INFO]${NC} $1"
-}
-
-log_success() {
-  echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
-
-log_warning() {
-  echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-log_error() {
-  echo -e "${RED}[ERROR]${NC} $1"
-}
-
 is_deb_system(){
   if command -v dpkg &> /dev/null; then
     return 0
@@ -258,77 +235,13 @@ install_docker(){
   fi
 }
 
-remove_apps() {
-  log_info "Removendo LibreOffice..."
-  sudo apt remove --purge -y libreoffice* || log_warning "Erro ao remover LibreOffice"
-  if flatpak list | grep -q org.libreoffice.LibreOffice; then
-    sudo flatpak uninstall --delete-data -y org.libreoffice.LibreOffice || log_warning "Erro ao remover org.libreoffice.LibreOffice"
-  fi
-  sudo snap remove --purge libreoffice || log_warning "Erro ao remover LibreOffice do Snap"
+source scripts/install_apps.sh
+source scripts/remove_apps.sh
+source scripts/install_docker.sh
 
-  log_info "Removendo Firefox..."
-  sudo apt remove --purge -y firefox || log_warning "Erro ao remover Firefox"
-  if flatpak list | grep -q org.mozilla.firefox; then
-    sudo flatpak uninstall --delete-data -y org.mozilla.firefox || log_warning "Erro ao remover org.mozilla.firefox"
-  fi
-  sudo snap remove --purge firefox || log_warning "Erro ao remover Firefox do Snap"
-
-  log_info "Removendo Thunderbird..."
-  sudo apt remove --purge -y thunderbird || log_warning "Erro ao remover Thunderbird"
-  if flatpak list | grep -q org.mozilla.Thunderbird; then
-    sudo flatpak uninstall --delete-data -y org.mozilla.Thunderbird || log_warning "Erro ao remover org.mozilla.Thunderbird"
-  fi
-  sudo snap remove --purge thunderbird || log_warning "Erro ao remover Thunderbird do Snap"
-
-  log_info "Removendo programas de mídia (Cheese, Rhythmbox, Shotwell)..."
-  sudo apt remove --purge -y cheese rhythmbox shotwell || log_warning "Erro ao remover programas de mídia"
-  if flatpak list | grep -q org.gnome.Cheese; then
-    sudo flatpak uninstall --delete-data -y org.gnome.Cheese || log_warning "Erro ao remover org.gnome.Cheese"
-  fi
-  if flatpak list | grep -q org.gnome.Rhythmbox3; then
-    sudo flatpak uninstall --delete-data -y org.gnome.Rhythmbox3 || log_warning "Erro ao remover org.gnome.Rhythmbox3"
-  fi
-  if flatpak list | grep -q org.gnome.Shotwell; then
-    sudo flatpak uninstall --delete-data -y org.gnome.Shotwell || log_warning "Erro ao remover org.gnome.Shotwell"
-  fi
-  sudo snap remove --purge cheese rhythmbox shotwell || log_warning "Erro ao remover programas de mídia do Snap"
-
-  log_info "Removendo jogos padrão do GNOME..."
-  sudo apt remove --purge -y gnome-sudoku gnome-mahjongg gnome-mines aisleriot || log_warning "Erro ao remover jogos padrão do GNOME"
-  if flatpak list | grep -q org.gnome.Sudoku; then
-    sudo flatpak uninstall --delete-data -y org.gnome.Sudoku || log_warning "Erro ao remover org.gnome.Sudoku"
-  fi
-  if flatpak list | grep -q org.gnome.Mahjongg; then
-    sudo flatpak uninstall --delete-data -y org.gnome.Mahjongg || log_warning "Erro ao remover org.gnome.Mahjongg"
-  fi
-  if flatpak list | grep -q org.gnome.Mines; then
-    sudo flatpak uninstall --delete-data -y org.gnome.Mines || log_warning "Erro ao remover org.gnome.Mines"
-  fi
-  if flatpak list | grep -q org.gnome.Aisleriot; then
-    sudo flatpak uninstall --delete-data -y org.gnome.Aisleriot || log_warning "Erro ao remover org.gnome.Aisleriot"
-  fi
-  sudo snap remove --purge gnome-sudoku gnome-mahjongg gnome-mines aisleriot || log_warning "Erro ao remover jogos do Snap"
-
-  log_info "Removendo aplicativos adicionais (Brasero, Remmina, GIMP)..."
-  sudo apt remove --purge -y brasero remmina gimp || log_warning "Erro ao remover Brasero, Remmina ou GIMP"
-  if flatpak list | grep -q org.gnome.Brasero; then
-    sudo flatpak uninstall --delete-data -y org.gnome.Brasero || log_warning "Erro ao remover org.gnome.Brasero"
-  fi
-  if flatpak list | grep -q org.remmina.Remmina; then
-    sudo flatpak uninstall --delete-data -y org.remmina.Remmina || log_warning "Erro ao remover org.remmina.Remmina"
-  fi
-  if flatpak list | grep -q org.gimp.GIMP; then
-    sudo flatpak uninstall --delete-data -y org.gimp.GIMP || log_warning "Erro ao remover org.gimp.GIMP"
-  fi
-  sudo snap remove --purge brasero remmina gimp || log_warning "Erro ao remover Brasero, Remmina ou GIMP do Snap"
-
-  sudo apt autoremove -y
-  sudo apt autoclean -y
-
-  log_success "Programas desnecessários removidos com sucesso!"
-}
-
-
+install_apps
+remove_apps
+install_docker
 
 system_update
 install_git
