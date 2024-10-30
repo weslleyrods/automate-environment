@@ -171,7 +171,7 @@ install_mongo_compass(){
 install_vivaldi(){
   log_info "Instalando Vivaldi..."
   if is_deb_system; then
-    wget -q https://downloads.vivaldi.com/stable/vivaldi-stable_6.2.3105.36-1_amd64.deb -O vivaldi.deb
+    wget -q https://downloads.vivaldi.com/stable/vivaldi-stable_7.0.3495.6-1_amd64.deb -O vivaldi.deb
     sudo dpkg -i vivaldi.deb
     sudo apt-get install -f -y
     rm vivaldi.deb && log_success "Vivaldi instalado com sucesso!"
@@ -207,10 +207,18 @@ install_warp_terminal(){
   fi
 }
 
-
 install_stremio(){
   log_info "Instalando Stremio..."
   sudo flatpak install -y flathub com.stremio.Stremio && log_success "Stremio instalado com sucesso!"
+}
+
+install_vlc(){
+  log_info "Instalando VLC..."
+  if is_deb_system; then
+    sudo apt-get install -y vlc && log_success "VLC instalado com sucesso!"
+  else
+    sudo flatpak install -y flathub org.videolan.VLC && log_success "VLC instalado com sucesso!"
+  fi
 }
 
 install_docker(){
@@ -252,23 +260,82 @@ install_docker(){
 
 remove_apps() {
   log_info "Removendo LibreOffice..."
-  sudo apt remove --purge -y libreoffice* 
-  sudo flatpak uninstall --delete-data -y org.libreoffice.LibreOffice
-  sudo snap remove --purge libreoffice
+  sudo apt remove --purge -y libreoffice* || log_warning "Erro ao remover LibreOffice"
+  if flatpak list | grep -q org.libreoffice.LibreOffice; then
+    sudo flatpak uninstall --delete-data -y org.libreoffice.LibreOffice || log_warning "Erro ao remover org.libreoffice.LibreOffice"
+  fi
+  sudo snap remove --purge libreoffice || log_warning "Erro ao remover LibreOffice do Snap"
 
-  log_info "Removendo Firefox... "
-  sudo apt remove --purge -y firefox
-  sudo flatpak uninstall --delete-data -y org.mozilla.firefox
-  sudo snap remove --purge firefox
+  log_info "Removendo Firefox..."
+  sudo apt remove --purge -y firefox || log_warning "Erro ao remover Firefox"
+  if flatpak list | grep -q org.mozilla.firefox; then
+    sudo flatpak uninstall --delete-data -y org.mozilla.firefox || log_warning "Erro ao remover org.mozilla.firefox"
+  fi
+  sudo snap remove --purge firefox || log_warning "Erro ao remover Firefox do Snap"
 
+  log_info "Removendo Thunderbird..."
+  sudo apt remove --purge -y thunderbird || log_warning "Erro ao remover Thunderbird"
+  if flatpak list | grep -q org.mozilla.Thunderbird; then
+    sudo flatpak uninstall --delete-data -y org.mozilla.Thunderbird || log_warning "Erro ao remover org.mozilla.Thunderbird"
+  fi
+  sudo snap remove --purge thunderbird || log_warning "Erro ao remover Thunderbird do Snap"
+
+  log_info "Removendo programas de mídia (Cheese, Rhythmbox, Shotwell)..."
+  sudo apt remove --purge -y cheese rhythmbox shotwell || log_warning "Erro ao remover programas de mídia"
+  if flatpak list | grep -q org.gnome.Cheese; then
+    sudo flatpak uninstall --delete-data -y org.gnome.Cheese || log_warning "Erro ao remover org.gnome.Cheese"
+  fi
+  if flatpak list | grep -q org.gnome.Rhythmbox3; then
+    sudo flatpak uninstall --delete-data -y org.gnome.Rhythmbox3 || log_warning "Erro ao remover org.gnome.Rhythmbox3"
+  fi
+  if flatpak list | grep -q org.gnome.Shotwell; then
+    sudo flatpak uninstall --delete-data -y org.gnome.Shotwell || log_warning "Erro ao remover org.gnome.Shotwell"
+  fi
+  sudo snap remove --purge cheese rhythmbox shotwell || log_warning "Erro ao remover programas de mídia do Snap"
+
+  log_info "Removendo jogos padrão do GNOME..."
+  sudo apt remove --purge -y gnome-sudoku gnome-mahjongg gnome-mines aisleriot || log_warning "Erro ao remover jogos padrão do GNOME"
+  if flatpak list | grep -q org.gnome.Sudoku; then
+    sudo flatpak uninstall --delete-data -y org.gnome.Sudoku || log_warning "Erro ao remover org.gnome.Sudoku"
+  fi
+  if flatpak list | grep -q org.gnome.Mahjongg; then
+    sudo flatpak uninstall --delete-data -y org.gnome.Mahjongg || log_warning "Erro ao remover org.gnome.Mahjongg"
+  fi
+  if flatpak list | grep -q org.gnome.Mines; then
+    sudo flatpak uninstall --delete-data -y org.gnome.Mines || log_warning "Erro ao remover org.gnome.Mines"
+  fi
+  if flatpak list | grep -q org.gnome.Aisleriot; then
+    sudo flatpak uninstall --delete-data -y org.gnome.Aisleriot || log_warning "Erro ao remover org.gnome.Aisleriot"
+  fi
+  sudo snap remove --purge gnome-sudoku gnome-mahjongg gnome-mines aisleriot || log_warning "Erro ao remover jogos do Snap"
+
+  log_info "Removendo aplicativos adicionais (Brasero, Remmina, GIMP)..."
+  sudo apt remove --purge -y brasero remmina gimp || log_warning "Erro ao remover Brasero, Remmina ou GIMP"
+  if flatpak list | grep -q org.gnome.Brasero; then
+    sudo flatpak uninstall --delete-data -y org.gnome.Brasero || log_warning "Erro ao remover org.gnome.Brasero"
+  fi
+  if flatpak list | grep -q org.remmina.Remmina; then
+    sudo flatpak uninstall --delete-data -y org.remmina.Remmina || log_warning "Erro ao remover org.remmina.Remmina"
+  fi
+  if flatpak list | grep -q org.gimp.GIMP; then
+    sudo flatpak uninstall --delete-data -y org.gimp.GIMP || log_warning "Erro ao remover org.gimp.GIMP"
+  fi
+  sudo snap remove --purge brasero remmina gimp || log_warning "Erro ao remover Brasero, Remmina ou GIMP do Snap"
+
+  sudo apt autoremove -y
+  sudo apt autoclean -y
+
+  log_success "Programas desnecessários removidos com sucesso!"
 }
+
+
 
 system_update
 install_git
 install_wget
 install_flatpak
 install_snap
-install_warp_terminal
+install_vlc
 remove_apps
 
 if is_deb_system; then
@@ -292,3 +359,4 @@ else
   install_stremio
   install_onlyoffice
 fi
+
