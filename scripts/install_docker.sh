@@ -2,7 +2,7 @@
 
 source ./logs/logging.sh
 
-install_docker_for_deb(){
+install_docker(){
   log_info "Installing Docker..."
   log_info "Installing Docker Engine..."
 

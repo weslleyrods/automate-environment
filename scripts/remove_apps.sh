@@ -15,5 +15,5 @@ function remove_apps() {
     else
       log_info "App not found: $app"
     fi
-  done < ./configs/list_remove_apps.txt
+  done < ./config/remove_apps.txt
 }
