@@ -49,15 +49,14 @@ system_update(){
 
 install_git(){
   log_info "Verificando instalação do Git..."
-    if is_deb_system; then
-      sudo apt-get install -y git && log_success "Git instalado com sucesso!"
-    elif command -v pacman &> /dev/null; then
-      sudo pacman -S --noconfirm git && log_success "Git instalado com sucesso!"
-    elif command -v dnf &> /dev/null; then
-      sudo dnf install -y git && log_success "Git instalado com sucesso!"
-    else
-      log_warning "Gerenciador de pacotes não suportado para instalação do Git."
-    fi
+  if is_deb_system; then
+    sudo apt-get install -y git && log_success "Git instalado com sucesso!"
+  elif command -v pacman &> /dev/null; then
+    sudo pacman -S --noconfirm git && log_success "Git instalado com sucesso!"
+  elif command -v dnf &> /dev/null; then
+    sudo dnf install -y git && log_success "Git instalado com sucesso!"
+  else
+    log_warning "Gerenciador de pacotes não suportado para instalação do Git."
   fi
 }
 
@@ -74,17 +73,22 @@ install_wget(){
   fi
 }
 
-install_flatpak(){
+install_flatpak() {
   log_info "Instalando Flatpak..."
+
   if is_deb_system; then
     sudo apt-get install -y flatpak && log_success "Flatpak instalado com sucesso!"
+  elif command -v pacman &>/dev/null; then
+    sudo pacman -S --noconfirm flatpak && log_success "Flatpak instalado com sucesso!"
+  elif command -v dnf &>/dev/null; then
+    sudo dnf install -y flatpak && log_success "Flatpak instalado com sucesso!"
   else
-    sudo pacman -S --noconfirm flatpak || sudo dnf install -y flatpak && log_success "Flatpak instalado com sucesso!"
+    log_error "Nenhum gerenciador de pacotes compatível encontrado!"
+    return 1
   fi
-  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-
-  fi
+  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && log_success "Repositório Flathub adicionado!"
 }
+
 
 install_snap(){
   log_info "Verificando instalação do Snap..."
@@ -98,7 +102,6 @@ install_snap(){
 install_gnome_software(){
   log_info "Instalando Gnome Software..."
   sudo apt-get install -y gnome-software && log_success "Gnome Software instalado com sucesso!"
-  fi
 }
 
 install_onlyoffice(){
@@ -191,22 +194,23 @@ install_google_chrome(){
 
 install_warp_terminal(){
   log_info "Instalando Warp Terminal..."
-  wget -q https://app.warp.dev/get_warp?package=deb -O warp.deb
-  sudo dpkg -i warp.deb
-  sudo apt-get install -f -y
-  rm warp.deb && log_success "Warp Terminal instalado com sucesso!" && log_success "Warp Terminal instalado com sucesso!"
+  wget -q https://app.warp.dev/download?package=deb -O warp-terminal.deb
+
+  if file warp-terminal.deb | grep -q 'Debian binary package'; then
+    sudo dpkg -i warp-terminal.deb
+    sudo apt-get install -f -y
+    rm warp-terminal.deb
+    log_success "Warp Terminal instalado com sucesso!"
+  else
+    log_error "O arquivo baixado não é um pacote Debian válido."
+    rm warp-terminal.deb
+  fi
 }
+
 
 install_stremio(){
   log_info "Instalando Stremio..."
-  if is_deb_system; then
-    wget -q https://dl.strem.io/stremio/releases/stremio_0.22.1_amd64.deb -O stremio.deb
-    sudo dpkg -i stremio.deb
-    sudo apt-get install -f -y
-    rm stremio.deb && log_success "Stremio instalado com sucesso!"
-  else
-    sudo flatpak install -y flathub com.stremio.Stremio && log_success "Stremio instalado com sucesso!"
-  fi
+  sudo flatpak install -y flathub com.stremio.Stremio && log_success "Stremio instalado com sucesso!"
 }
 
 install_docker(){
@@ -246,17 +250,30 @@ install_docker(){
   fi
 }
 
+remove_apps() {
+  log_info "Removendo LibreOffice..."
+  sudo apt remove --purge -y libreoffice* 
+  sudo flatpak uninstall --delete-data -y org.libreoffice.LibreOffice
+  sudo snap remove --purge libreoffice
+
+  log_info "Removendo Firefox... "
+  sudo apt remove --purge -y firefox
+  sudo flatpak uninstall --delete-data -y org.mozilla.firefox
+  sudo snap remove --purge firefox
+
+}
+
 system_update
 install_git
 install_wget
 install_flatpak
 install_snap
 install_warp_terminal
+remove_apps
 
 if is_deb_system; then
   install_gnome_software
   install_docker
-
   install_postman
   install_vscode
   install_discord
