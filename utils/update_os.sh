@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source ./logs/logging.sh
-source check_os.sh
+source ./utils/check_os.sh
 
 system_update(){
   log_info "Updating the system..."

@@ -1,11 +1,12 @@
 apt:git
 apt:wget
-apt: curl
+apt:curl
 apt:gnome-software
-apt:vlc
+apt:warp-terminal
 
-snap:onlyoffice-desktopeditors
 snap:postman
+snap:code|--classic
+snap:onlyoffice-desktopeditors
 snap:discord
 snap:google-chrome
 snap:spotify
@@ -18,9 +19,9 @@ flatpak:com.vivaldi.Vivaldi
 flatpak:com.stremio.Stremio
 flatpak:org.videolan.VLC
 
-wget: https://go.microsoft.com/fwlink/?LinkID=760868
-wget: https://discord.com/api/download?platform=linux&format=deb
-wget: https://downloads.mongodb.com/compass/mongodb-compass_1.44.5_amd64.deb
-wget: https://downloads.vivaldi.com/stable/vivaldi-stable_7.0.3495.6-1_amd64.deb
-wget: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-wget: https://app.warp.dev/download?package=deb
+wget:https://go.microsoft.com/fwlink/?LinkID=760868
+wget:https://discord.com/api/download?platform=linux&format=deb
+wget:https://downloads.mongodb.com/compass/mongodb-compass_1.44.5_amd64.deb
+wget:https://downloads.vivaldi.com/stable/vivaldi-stable_7.0.3495.6-1_amd64.deb
+wget:https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+wget:https://app.warp.dev/download?package=deb
