@@ -18,9 +18,9 @@ while IFS= read -r app; do
       
       log_info "Installing via APT: $apt_pkg"
       if [[ -n "$apt_opts" ]]; then
-        sudo apt install -y $apt_opts "$apt_pkg" || log_warning "Fail to install $apt_pkg via APT."
+        sudo apt install $apt_opts "$apt_pkg" || log_warning "Fail to install $apt_pkg via APT."
       else
-        sudo apt install -y "$apt_pkg" || log_warning "Fail to install $apt_pkg via APT."
+        sudo apt install "$apt_pkg" || log_warning "Fail to install $apt_pkg via APT."
       fi
       ;;
     snap:*)
