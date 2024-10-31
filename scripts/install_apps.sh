@@ -1,31 +1,12 @@
 #!/bin/bash
 
 source ./logs/logging.sh
-
-is_deb_system(){
-  if command -v dpkg &> /dev/null; then
-    return 0
-  else
-    return 1 
-  fi
-}
-
-system_update(){
-  log_info "Updating the system..."
-  if is_deb_system; then
-    sudo apt-get update && sudo apt-get upgrade -y && log_success "System updated!"
-  else
-    if command -v pacman &> /dev/null; then
-      sudo pacman -Syu --noconfirm && log_success "System updated!"
-    elif command -v dnf &> /dev/null; then
-      sudo dnf update -y && log_success "System updated!"
-    else
-      log_warning "Package manager not supported for updating the system."
-    fi
-  fi
-}
+source install_packages.sh
+source ./utils/check_os.sh
+source ./utils/update_os.sh
 
 install_apps() {
+  system_update
   while IFS= read -r app; do
     case "$app" in
       apt:*)

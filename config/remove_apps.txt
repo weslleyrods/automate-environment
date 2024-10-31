@@ -1,7 +1,7 @@
 
-apt:libreoffice*
-flatpak:org.libreoffice.LibreOffice
-snap:libreoffice
+apt:libreoffice-*
+flatpak:org.libreoffice.LibreOffice-*
+snap:libreoffice-*
 
 apt:firefox
 flatpak:org.mozilla.firefox

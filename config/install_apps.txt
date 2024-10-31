@@ -1,7 +1,6 @@
 apt:git
 apt:wget
-apt:flatpak
-apt:snapd
+apt: curl
 apt:gnome-software
 apt:vlc
 

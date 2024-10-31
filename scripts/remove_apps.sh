@@ -1,19 +1,40 @@
 #!/bin/bash
 source ./logs/logging.sh
 
-function remove_apps() {
+remove_apps() {
   while IFS= read -r app; do
-    if dpkg -l | grep -q "$app"; then
-      sudo apt-get remove -y "$app"
-      log_success "Debian app removed: $app"
-    elif flatpak list | grep -q "$app"; then
-      flatpak uninstall -y "$app"
-      log_success "Flatpak app removed: $app"
-    elif snap list | grep -q "$app"; then
-      sudo snap remove "$app"
-      log_success "Snap app removed: $app"
-    else
-      log_info "App not found: $app"
-    fi
+    case "$app" in
+      apt:*)
+        package="${app#apt:}"
+        if dpkg -l | grep -i "$package" &>/dev/null; then
+          sudo apt-get purge -y "$package" && log_success "Debian app removed: $package"
+        else
+          log_info "APT package not found: $package"
+        fi
+        ;;
+        
+      flatpak:*)
+        package="${app#flatpak:}"
+        if flatpak list | grep -i "$package" &>/dev/null; then
+          sudo flatpak uninstall -y "$package" && log_success "Flatpak app removed: $package"
+        else
+          log_info "Flatpak package not found: $package"
+        fi
+        ;;
+        
+      snap:*)
+        package="${app#snap:}"
+        if snap list | grep -i "$package" &>/dev/null; then
+          sudo snap remove "$package" && log_success "Snap app removed: $package"
+        else
+          log_info "Snap package not found: $package"
+        fi
+        ;;
+        
+      *)
+        log_warning "Unrecognized format for: $app"
+        ;;
+    esac
   done < ./config/remove_apps.txt
 }
+
