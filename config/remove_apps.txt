@@ -36,6 +36,7 @@ snap:aisleriot
 
 apt:brasero
 apt:remmina
+flatpak:remmina
 apt:gimp
 flatpak:org.gnome.Brasero
 flatpak:org.remmina.Remmina
