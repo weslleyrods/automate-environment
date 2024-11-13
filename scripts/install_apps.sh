@@ -47,22 +47,20 @@ install_apps() {
         ;;
       wget:*)
         url="${app#wget:}"
-        filename="downloaded_app.deb"  # Nome fixo para arquivos .deb
-        log_info "Trying to install $filename with wget..."
+        filename=$(basename "$url")  # Extrai o nome do arquivo
+        log_info "Trying to download $filename with wget..."
         
-        # Baixa o arquivo com nome fixo
         if wget -q "$url" -O "$filename"; then
-          # Verifica se o arquivo baixado é um .deb real
-          if file "$filename" | grep -q "Debian binary package"; then
-            log_info "Installing $filename..."
-            sudo dpkg -i "$filename" || log_warning "Failed to install $filename."
-            log_success "$filename installed successfully!"
-          else
-            log_warning "$filename is not a valid .deb package."
-          fi
-          rm -f "$filename" && log_success "File $filename removed."
+            if file "$filename" | grep -q "Debian binary package"; then
+                log_info "Installing $filename..."
+                sudo dpkg -i "$filename" || log_warning "Failed to install $filename."
+                log_success "$filename installed successfully!"
+            else
+                log_warning "$filename is not a valid .deb package."
+            fi
+            rm -f "$filename" && log_success "File $filename removed."
         else
-          log_warning "Failed to download $filename."
+            log_warning "Failed to download $filename."
         fi
         ;;
       *)

@@ -12,15 +12,12 @@ snap:spotify
 
 flatpak:org.onlyoffice.desktopeditors
 flatpak:com.getpostman.Postman
-flatpak:com.discordapp.Discord
 flatpak:org.mongodb.Compass
 flatpak:com.vivaldi.Vivaldi
 flatpak:flathub|com.stremio.Stremio
 flatpak:org.videolan.VLC
 
-wget:https://go.microsoft.com/fwlink/?LinkID=760868
 wget:https://discord.com/api/download?platform=linux&format=deb
 wget:https://downloads.mongodb.com/compass/mongodb-compass_1.44.5_amd64.deb
-wget:https://downloads.vivaldi.com/stable/vivaldi-stable_7.0.3495.6-1_amd64.deb
 wget:https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 wget:https://app.warp.dev/download?package=deb
