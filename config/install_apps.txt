@@ -10,7 +10,6 @@ snap:discord
 snap:spotify
 
 flatpak:org.onlyoffice.desktopeditors
-flatpak:com.getpostman.Postman
 flatpak:org.mongodb.Compass
 flatpak:com.vivaldi.Vivaldi
 flatpak:flathub|com.stremio.Stremio
