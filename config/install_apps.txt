@@ -7,7 +7,6 @@ snap:postman
 snap:code|--classic
 snap:onlyoffice-desktopeditors
 snap:discord
-snap:google-chrome
 snap:spotify
 
 flatpak:org.onlyoffice.desktopeditors
